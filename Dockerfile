@@ -4,10 +4,11 @@ RUN apt-get update
 
 RUN apt-get install -y gcc\
 		       libpcre3\
+		       libpcre3-dev\
 		       build-essential\
-		       libaprl-dec\
+		       libapr1-dev\
 		       libssl-dev\
-		       zliblg-dev\
+		       zlib1g-dev\
 		       wget
 
 WORKDIR /test
@@ -62,10 +63,12 @@ RUN ./configure --prefix=/etc/nginx\
 		--with-stream_ssl_module\
 		--with-stream_ssl_preread_module\
 		--with-cc-opt='-g -O2 -fdebug-prefix-map=/data/builder/debuild/nginx-1.17.10/debian/debuild-base/nginx-1.17.10=. -fstack-protector-strong -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -fPIC'\
-		--with-ld-opt='-Wl,-z,relro -Wl,-z,now -Wl,--as-needed -pie'
-		--add-module=/tmp/nginx-module-vts-0.1.18
+		--with-ld-opt='-Wl,-z,relro -Wl,-z,now -Wl,--as-needed -pie'\
+		--add-module=../nginx-module-vts-0.1.18
 
 RUN make -j 4
+
+RUN ls objs/
 
 RUN cp objs/ngx_http_vhost_traffic_status_module.so /etc/nginx/modules/
 
