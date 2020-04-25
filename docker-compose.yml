@@ -1,0 +1,19 @@
+version: "3.6"
+
+services:
+        nginx-vts:
+            container_name: nginx-vts
+            build: .
+            ports:
+                - 80:80
+
+        prometheus-nginx:
+            container_name: prometheus-nginx
+            image: sophos/nginx-vts-exporter:latest
+            depends_on:
+                - nginx-vts
+            environment:
+                - NGINX_STATUS="http://nginx-vts/status/format/json"
+            ports:
+                - 9913:9913
+
